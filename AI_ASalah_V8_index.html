@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#075cff">
+<title>AI A.Salah V8</title>
+<style>
+:root{--blue:#075cff;--bg:#f3f7ff;--card:#fff;--text:#102040;--muted:#667085;--bubble:#edf3fb;--border:#d9e1ec}
+body.dark{--bg:#0b1220;--card:#111a2b;--text:#eef4ff;--muted:#aab6ca;--bubble:#1c2940;--border:#2c3950}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+.app{max-width:760px;margin:auto;min-height:100vh;background:var(--card);display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,#075cff,#2675ff);color:white;padding:18px}
+.top{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;gap:12px;align-items:center}
+.logo{width:48px;height:48px;border-radius:15px;background:white;color:#075cff;display:grid;place-items:center;font-weight:bold;font-size:22px}
+h1{font-size:22px;margin:0 0 3px}.sub{margin:0;font-size:13px;opacity:.9}.status{font-size:12px;margin-top:12px;background:#ffffff22;padding:7px 10px;border-radius:10px;display:inline-block}
+button{border:0;border-radius:11px;padding:10px 13px;background:#e7efff;color:#0b4bc4;font-weight:700}.icon{background:#ffffff22;color:white;font-size:18px}
+#chat{flex:1;padding:18px;overflow-y:auto;min-height:48vh}.msg{padding:13px 15px;border-radius:17px;margin:10px 0;max-width:88%;line-height:1.45;white-space:pre-wrap}
+.user{background:var(--blue);color:white;margin-left:auto}.ai{background:var(--bubble);margin-right:auto}.typing{display:none;color:var(--muted);font-size:13px;padding:4px 15px}
+.quick{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--border)}
+.composer{display:flex;gap:8px;padding:14px;border-top:1px solid var(--border)}
+input{flex:1;padding:14px;border:1px solid var(--border);border-radius:12px;font-size:16px;background:var(--card);color:var(--text)}
+.send{background:#075cff;color:white;min-width:70px}.panel{display:none;padding:18px;border-top:1px solid var(--border)}.panel.show{display:block}
+.row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.small{color:var(--muted);font-size:13px}.footer{text-align:center;color:var(--muted);font-size:11px;padding:7px}
+body.dark button{background:#1d2d49;color:#bcd3ff}@media(max-width:500px){.msg{max-width:92%}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top"><div class="brand"><div class="logo">AI</div><div><h1>AI A.Salah</h1><p class="sub">Your Personal Intelligence (PI)</p></div></div><button class="icon" onclick="settings()">⚙️</button></div><div class="status">● Online — V8 Free Demo</div></header>
+<main id="chat"></main><div id="typing" class="typing">AI A.Salah is thinking…</div>
+<div class="quick">
+<button onclick="quick('Hello AI A.Salah')">👋 Hello</button><button onclick="quick('Teach me coding')">💻 Coding</button><button onclick="quick('Give me motivation')">💪 Motivation</button><button onclick="quick('Tell me about AI')">🧠 AI</button><button onclick="clearChat()">🗑️ Clear</button>
+</div>
+<div id="panel" class="panel"><h2>AI A.Salah Settings</h2><div class="row"><div><b>Dark mode</b><div class="small">Change appearance</div></div><button onclick="dark()">🌙</button></div><div class="row"><div><b>Read replies aloud</b><div class="small">Uses your phone's speech feature</div></div><button onclick="voiceToggle()">🔊</button></div></div>
+<div class="composer"><button onclick="listen()">🎙️</button><input id="input" placeholder="Message AI A.Salah..." autocomplete="off"><button class="send" onclick="send()">Send</button></div>
+<div class="footer">AI A.Salah V8 • Personal Intelligence</div>
+</div>
+<script>
+const chat=document.getElementById('chat'),input=document.getElementById('input'),typingBox=document.getElementById('typing');let speech=localStorage.getItem('speech')==='1';
+function add(t,c,speak=false){let d=document.createElement('div');d.className='msg '+c;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;if(speak&&speech&&'speechSynthesis'in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(t))}}
+function reply(t){let x=t.toLowerCase();if(x.includes('hello')||x.includes('hi'))return'Hello boss 👋 I’m AI A.Salah V8. Welcome back to your Personal Intelligence.';if(x.includes('coding')||x.includes('code'))return'Absolutely 💻. I can guide you from Coding Day 1, step by step, using your phone.';if(x.includes('motivation'))return'Keep going, boss 💙. Big projects start with small steps. Insha Allah, AI A.Salah will keep growing.';if(x.includes('ai'))return'AI means Artificial Intelligence. AI A.Salah is your own Personal Intelligence project.';return'I received: “'+t+'”\n\nI’m still in Free Demo Mode. The next major upgrade is connecting a secure real AI backend.'}
+function send(){let t=input.value.trim();if(!t)return;add(t,'user');input.value='';typingBox.style.display='block';setTimeout(()=>{typingBox.style.display='none';add(reply(t),'ai',true);save()},500)}
+function quick(t){input.value=t;send()}function save(){localStorage.setItem('chat',chat.innerHTML)}function load(){let s=localStorage.getItem('chat');if(s)chat.innerHTML=s;else add('Assalamu alaikum 👋 I’m AI A.Salah V8. Welcome to your Personal Intelligence.','ai')}
+function clearChat(){localStorage.removeItem('chat');chat.innerHTML='';add('Chat cleared. Welcome back to AI A.Salah V8 🤖','ai')}
+function settings(){document.getElementById('panel').classList.toggle('show')}function dark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark')?'1':'0')}
+function voiceToggle(){speech=!speech;localStorage.setItem('speech',speech?'1':'0');add(speech?'Voice replies are ON 🔊':'Voice replies are OFF 🔇','ai')}
+function listen(){let R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){add('Voice input is not supported by this browser. Try Chrome on Android.','ai');return}let r=new R();r.lang='en-NG';r.onstart=()=>input.placeholder='Listening…';r.onresult=e=>{input.value=e.results[0][0].transcript;send()};r.onend=()=>input.placeholder='Message AI A.Salah...';r.start()}
+input.addEventListener('keydown',e=>{if(e.key==='Enter')send()});if(localStorage.getItem('dark')==='1')document.body.classList.add('dark');load();
+</script>
+</body></html>
